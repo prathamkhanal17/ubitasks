@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tasks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        letter-spacing: -0.01em;
+      }
+
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 10px;
+      }
+
+      .task-content {
+        display: none;
+      }
+      .task-item.active .task-content {
+        display: block;
+      }
+
+      .sortable-ghost {
+        opacity: 0.4;
+      }
+      .sortable-drag {
+        background: white;
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+      }
+
+      .task-item {
+        position: relative;
+        z-index: 1;
+      }
+      .task-item.active {
+        z-index: 2;
+      }
+
+      .delete-task,
+      .edit-task,
+      .drag-handle,
+      .add-comment {
+        position: relative;
+        z-index: 3;
+      }
+
+      .editable-title,
+      .editable-desc {
+        transition: all 0.2s ease;
+      }
+
+      .editable-title:focus,
+      .editable-desc:focus {
+        outline: none;
+        background: #f8fafc;
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body class="bg-white text-slate-900 min-h-screen pb-24">
+    <nav
+      class="p-8 flex justify-between items-center sticky top-0 bg-white/80 backdrop-blur-md z-10"
+    >
+      <h1 class="text-sm font-semibold uppercase tracking-widest">Tasks</h1>
+      <div id="task-count" class="text-xs text-slate-400 font-mono">
+        00 ITEMS
+      </div>
+    </nav>
+
+    <main class="max-w-2xl mx-auto px-6 mt-12">
+      <ul
+        id="todo-list"
+        class="divide-y divide-slate-100 border-t border-slate-100"
+      ></ul>
+    </main>
+
+    <button
+      id="open-modal"
+      class="fixed bottom-10 right-10 w-14 h-14 bg-black text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform z-50"
+    >
+      <i class="fa-solid fa-plus"></i>
+    </button>
+
+    <div
+      id="add-modal"
+      class="fixed inset-0 bg-white/95 z-[60] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300"
+    >
+      <button
+        id="close-modal"
+        class="absolute top-10 right-10 p-2 hover:rotate-90 transition-transform"
+      >
+        <i class="fa-solid fa-xmark text-2xl"></i>
+      </button>
+
+      <form id="todo-form" class="w-full max-w-md px-10">
+        <input
+          type="text"
+          id="title-input"
+          placeholder="Task Title"
+          class="w-full text-4xl font-light border-none outline-none placeholder:text-slate-200 mb-6"
+          required
+        />
+        <textarea
+          id="desc-input"
+          placeholder="Add description..."
+          class="w-full text-lg font-light border-none outline-none placeholder:text-slate-200 mb-10 resize-none"
+          rows="3"
+        ></textarea>
+        <button
+          type="submit"
+          class="group flex items-center gap-4 text-sm font-semibold uppercase tracking-widest"
+        >
+          Create Task
+          <span
+            class="w-12 h-[1px] bg-black group-hover:w-20 transition-all"
+          ></span>
+        </button>
+      </form>
+    </div>
+
+    <div
+      id="delete-modal"
+      class="fixed inset-0 bg-black/20 z-[70] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300"
+    >
+      <div class="bg-white p-10 max-w-sm w-full mx-4 shadow-2xl">
+        <h3 class="text-xl font-light mb-6">Delete this task?</h3>
+        <div class="flex gap-4">
+          <button
+            id="confirm-delete"
+            class="flex-1 py-3 bg-black text-white font-medium text-sm uppercase tracking-wider hover:bg-slate-800 transition-colors"
+          >
+            Delete
+          </button>
+          <button
+            id="cancel-delete"
+            class="flex-1 py-3 border border-slate-200 text-slate-600 font-medium text-sm uppercase tracking-wider hover:bg-slate-50 transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
