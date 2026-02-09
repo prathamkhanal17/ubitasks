@@ -24,8 +24,6 @@ const Persistence = {
   saveToHash() {
     const data = JSON.stringify(State.tasks);
     const encoded = btoa(encodeURIComponent(data));
-    console.log("Persistence.saveToHash called, saving data:", data);
-    console.log("Encoded hash:", encoded);
     window.location.hash = encoded;
   },
 
@@ -192,14 +190,7 @@ const TaskRenderer = {
 
     deleteBtn.onclick = (e) => {
       e.stopPropagation();
-      console.log(
-        "Delete button clicked for task:",
-        task.id,
-        "type:",
-        typeof task.id,
-      );
       State.taskToDelete = { id: task.id, element: li };
-      console.log("State.taskToDelete set to:", State.taskToDelete);
       UI.showModal(DOM.deleteModal);
     };
 
@@ -216,7 +207,6 @@ const TaskRenderer = {
     const cachedUsername = localStorage.getItem("cachedUsername");
     if (cachedUsername) {
       usernameInput.value = cachedUsername;
-      console.log("Loaded cached username:", cachedUsername);
     }
 
     const postComment = () => {
@@ -227,7 +217,6 @@ const TaskRenderer = {
 
       // Cache the username in localStorage
       localStorage.setItem("cachedUsername", username);
-      console.log("Username cached:", username);
 
       const comment = {
         username: username,
@@ -279,27 +268,7 @@ const TaskManager = {
   },
 
   delete(taskId) {
-    console.log(
-      "TaskManager.delete called with taskId:",
-      taskId,
-      "type:",
-      typeof taskId,
-    );
-    console.log("State.tasks before delete:", State.tasks);
-    State.tasks = State.tasks.filter((t) => {
-      console.log(
-        "Comparing task.id:",
-        t.id,
-        "type:",
-        typeof t.id,
-        "with taskId:",
-        Number(taskId),
-        "type:",
-        typeof Number(taskId),
-      );
-      return t.id !== Number(taskId);
-    });
-    console.log("State.tasks after delete:", State.tasks);
+    State.tasks = State.tasks.filter((t) => t.id !== Number(taskId));
     Persistence.saveToHash();
     UI.renderTasks();
     UI.updateCount();
@@ -338,21 +307,14 @@ const ModalController = {
     };
 
     DOM.confirmDeleteBtn.onclick = () => {
-      console.log(
-        "Confirm delete clicked, State.taskToDelete:",
-        State.taskToDelete,
-      );
       if (State.taskToDelete) {
         const li = State.taskToDelete.element;
-        const taskId = State.taskToDelete.id; // Store the ID before clearing
+        const taskId = State.taskToDelete.id;
         li.classList.add("opacity-0", "scale-95");
         setTimeout(() => {
-          console.log("Calling TaskManager.delete with id:", taskId);
           TaskManager.delete(taskId);
-          State.taskToDelete = null; // Clear after delete completes
+          State.taskToDelete = null;
         }, 300);
-      } else {
-        console.log("No task to delete!");
       }
       UI.hideModal(DOM.deleteModal);
     };
