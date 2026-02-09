@@ -1,4 +1,4 @@
-# Tasks App
+# UbiTask App
 
 A lightweight, shareable task management application with collaborative commenting. All data is stored in the URL, making tasks instantly shareable and requiring no backend infrastructure.
 
@@ -6,7 +6,8 @@ A lightweight, shareable task management application with collaborative commenti
 
 - **URL-based Persistence**: All tasks and comments are encoded in the URL hash
 - **Shareable Tasks**: Copy and share the URL to share your entire task list
-- **Multi-user Comments**: Anyone can add comments with their name
+- **One-Click Copy**: Copy button in the navigation bar for easy sharing
+- **Multi-user Comments**: Anyone can add comments with their name (username is cached for convenience)
 - **Drag & Drop Reordering**: Organize tasks by dragging them
 - **Inline Editing**: Edit task titles and descriptions directly
 - **No Database Required**: Everything works client-side
@@ -29,27 +30,31 @@ A lightweight, shareable task management application with collaborative commenti
 ### Adding Comments
 
 1. Expand a task by clicking on it
-2. Enter your name in the "Name" field
+2. Enter your name in the "Name" field (this will be cached automatically)
 3. Enter your comment in the "Add a comment..." field
 4. Click "Post" or press Enter
 
+**Note**: Your username is saved locally and will be pre-filled the next time you comment.
+
 ### Sharing Tasks
 
-Simply copy the URL from your browser's address bar and share it. Anyone opening that URL will see the exact same tasks and comments.
+Click the "Copy Link" button in the top-right corner of the navigation bar to copy the current URL to your clipboard. Share this URL with others - anyone opening it will see the exact same tasks and comments.
+
+Alternatively, you can copy the URL directly from your browser's address bar.
 
 ## Deployment
 
 This is a static web application consisting of three files:
 
 - `index.html` - Main HTML structure
-- `app.js` - Application logic
+- `script.js` - Application logic
 - Font Awesome CSS (loaded from CDN or can be hosted locally)
 
 ### Cloudflare Pages
 
 1. **Prepare Your Repository**
    - Create a new Git repository
-   - Add `index.html` and `app.js` to the repository
+   - Add `index.html` and `script.js` to the repository
    - Commit and push to GitHub/GitLab
 
 2. **Deploy to Cloudflare Pages**
@@ -69,7 +74,7 @@ This is a static web application consisting of three files:
 
 ### GitHub Pages
 
-1. Create a repository with `index.html` and `app.js`
+1. Create a repository with `index.html` and `script.js`
 2. Go to repository Settings → Pages
 3. Select the branch to deploy (usually `main`)
 4. Select root folder `/`
@@ -80,7 +85,7 @@ This is a static web application consisting of three files:
 
 1. **Via Drag & Drop**
    - Go to [Netlify](https://www.netlify.com/)
-   - Drag your folder containing `index.html` and `app.js` to the deploy zone
+   - Drag your folder containing `index.html` and `script.js` to the deploy zone
 
 2. **Via Git**
    - Click "New site from Git"

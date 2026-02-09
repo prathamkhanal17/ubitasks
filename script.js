@@ -17,17 +17,18 @@ const DOM = {
   closeModalBtn: document.getElementById("close-modal"),
   confirmDeleteBtn: document.getElementById("confirm-delete"),
   cancelDeleteBtn: document.getElementById("cancel-delete"),
+  copyUrlBtn: document.getElementById("copy-url-btn"),
 };
 
 // Persistence Module
 const Persistence = {
-  saveToHash() {
+  encode() {
     const data = JSON.stringify(State.tasks);
     const encoded = btoa(encodeURIComponent(data));
     window.location.hash = encoded;
   },
 
-  loadFromHash() {
+  decode() {
     try {
       const hash = window.location.hash.slice(1);
       if (!hash) return false;
@@ -178,7 +179,7 @@ const TaskRenderer = {
         task.title = titleEl.textContent.trim();
         task.description = descEl.textContent.trim();
 
-        Persistence.saveToHash();
+        Persistence.encode();
         editBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
       }
     };
@@ -234,7 +235,7 @@ const TaskRenderer = {
       commentsList.appendChild(c);
 
       commentInput.value = "";
-      Persistence.saveToHash();
+      Persistence.encode();
     };
 
     commentBtn.onclick = (e) => {
@@ -263,13 +264,13 @@ const TaskManager = {
 
     State.tasks.push(task);
     UI.renderTasks();
-    Persistence.saveToHash();
+    Persistence.encode();
     UI.updateCount();
   },
 
   delete(taskId) {
     State.tasks = State.tasks.filter((t) => t.id !== Number(taskId));
-    Persistence.saveToHash();
+    Persistence.encode();
     UI.renderTasks();
     UI.updateCount();
   },
@@ -282,7 +283,7 @@ const TaskManager = {
       if (task) newOrder.push(task);
     });
     State.tasks = newOrder;
-    Persistence.saveToHash();
+    Persistence.encode();
     UI.renderTasks();
   },
 };
@@ -317,6 +318,22 @@ const ModalController = {
         }, 300);
       }
       UI.hideModal(DOM.deleteModal);
+    };
+
+    DOM.copyUrlBtn.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        const originalHTML = DOM.copyUrlBtn.innerHTML;
+        DOM.copyUrlBtn.innerHTML =
+          '<i class="fa-solid fa-check"></i><span class="hidden sm:inline">Copied!</span>';
+        DOM.copyUrlBtn.classList.add("text-black");
+        setTimeout(() => {
+          DOM.copyUrlBtn.innerHTML = originalHTML;
+          DOM.copyUrlBtn.classList.remove("text-black");
+        }, 2000);
+      } catch (err) {
+        console.error("Failed to copy URL:", err);
+      }
     };
 
     document.addEventListener("keydown", (e) => {
@@ -369,7 +386,7 @@ const SortableController = {
 // App Initialization Module
 const App = {
   init() {
-    const hasData = Persistence.loadFromHash();
+    const hasData = Persistence.decode();
 
     if (hasData) {
       UI.renderTasks();
@@ -382,7 +399,7 @@ const App = {
     SortableController.init();
 
     window.addEventListener("hashchange", () => {
-      if (Persistence.loadFromHash()) {
+      if (Persistence.decode()) {
         UI.renderTasks();
       }
     });
@@ -405,7 +422,7 @@ const App = {
       },
     ];
     UI.renderTasks();
-    Persistence.saveToHash();
+    Persistence.encode();
   },
 };
 
