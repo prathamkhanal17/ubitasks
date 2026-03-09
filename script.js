@@ -407,19 +407,19 @@ const App = {
 
   loadDefaultTasks() {
     State.tasks = [
-      {
-        id: Date.now(),
-        title: "Example task with description",
-        description: "This is a sample task to demonstrate the application.",
-        comments: [],
-      },
-      {
-        id: Date.now() + 1,
-        title: "Click to expand and add comments",
-        description:
-          "You can add multiple comments from different users to collaborate on tasks.",
-        comments: [],
-      },
+      // {
+      //   id: Date.now(),
+      //   title: "Example task with description",
+      //   description: "This is a sample task to demonstrate the application.",
+      //   comments: [],
+      // },
+      // {
+      //   id: Date.now() + 1,
+      //   title: "Click to expand and add comments",
+      //   description:
+      //     "You can add multiple comments from different users to collaborate on tasks.",
+      //   comments: [],
+      // },
     ];
     UI.renderTasks();
     Persistence.encode();
