@@ -20,6 +20,47 @@ const DOM = {
   copyUrlBtn: document.getElementById("copy-url-btn"),
 };
 
+// Sharing Module
+const LinkService = {
+  async getShareUrl() {
+    const longUrl = window.location.href;
+
+    // Skip shortening for local/file URLs where a public short link is not useful.
+    if (
+      window.location.protocol === "file:" ||
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1"
+    ) {
+      return longUrl;
+    }
+
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      const response = await fetch("https://cleanuri.com/api/v1/shorten", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `url=${encodeURIComponent(longUrl)}`,
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const data = await response.json();
+      if (data?.result_url) {
+        return data.result_url;
+      }
+    } catch (error) {
+      console.warn("URL shortening failed, using full URL.", error);
+    }
+
+    return longUrl;
+  },
+};
+
 // Persistence Module
 const Persistence = {
   encode() {
@@ -322,7 +363,8 @@ const ModalController = {
 
     DOM.copyUrlBtn.onclick = async () => {
       try {
-        await navigator.clipboard.writeText(window.location.href);
+        const shareUrl = await LinkService.getShareUrl();
+        await navigator.clipboard.writeText(shareUrl);
         const originalHTML = DOM.copyUrlBtn.innerHTML;
         DOM.copyUrlBtn.innerHTML =
           '<i class="fa-solid fa-check"></i><span class="hidden sm:inline">Copied!</span>';

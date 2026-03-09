@@ -7,6 +7,7 @@ A lightweight, shareable task management application with collaborative commenti
 - **URL-based Persistence**: All tasks and comments are encoded in the URL hash
 - **Shareable Tasks**: Copy and share the URL to share your entire task list
 - **One-Click Copy**: Copy button in the navigation bar for easy sharing
+- **Smart Link Shortening**: Copy tries to shorten long share URLs and falls back automatically
 - **Multi-user Comments**: Anyone can add comments with their name (username is cached for convenience)
 - **Drag & Drop Reordering**: Organize tasks by dragging them
 - **Inline Editing**: Edit task titles and descriptions directly
@@ -38,7 +39,7 @@ A lightweight, shareable task management application with collaborative commenti
 
 ### Sharing Tasks
 
-Click the "Copy Link" button in the top-right corner of the navigation bar to copy the current URL to your clipboard. Share this URL with others - anyone opening it will see the exact same tasks and comments.
+Click the "Copy Link" button in the top-right corner of the navigation bar to copy a share URL to your clipboard. The app first attempts to shorten the URL for easier sharing and falls back to the full URL if shortening is unavailable. Anyone opening the copied URL will see the exact same tasks and comments.
 
 Alternatively, you can copy the URL directly from your browser's address bar.
 
